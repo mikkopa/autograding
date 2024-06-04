@@ -3,7 +3,8 @@ name: CI
 on: [push]
 
 jobs:
-  build:
+  # run node unit tests
+  units:
     runs-on: ubuntu-latest
 
     strategy:
@@ -16,6 +17,20 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
-      - run: npm install
+      - run: npm ci
       - run: npm run lint
       - run: npm test
+
+  # test action works running from the graph
+  integration:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 20
+      - run: npm ci
+      - run: npm run build
+
+      - uses: ./
