@@ -1,7 +1,7 @@
 import * as core from '@actions/core'
 import fs from 'fs'
 import path from 'path'
-import {Test, runAll} from './runner'
+import { Test, runAll } from './runner'
 
 const run = async (): Promise<void> => {
   try {
@@ -16,7 +16,9 @@ const run = async (): Promise<void> => {
     await runAll(json.tests as Array<Test>, cwd)
   } catch (error) {
     // If there is any error we'll fail the action with the error message
-    console.error(error.message)
+    if (error instanceof Error) {
+      console.error(error.message)
+    }
     core.setFailed(`Autograding failure: ${error}`)
   }
 }
